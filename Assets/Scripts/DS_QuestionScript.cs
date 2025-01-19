@@ -365,12 +365,12 @@ public class DS_QuestionScript : MonoBehaviour
         public string callAllInstructionText()
     {
         int randomIndex = Random.Range(0, allInstructions.Count);
-        return instructions[randomIndex];
+        return allInstructions[randomIndex];
     }
 
-     public string CallYourTurnForAllPlayers()
+     public string AllPlayersTurn()
     {
         int randomIndex = Random.Range(0, allPlayersTurnTexts.Count);
-        return instructions[randomIndex];
+        return allPlayersTurnTexts[randomIndex];
     }
 }

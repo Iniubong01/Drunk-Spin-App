@@ -13,7 +13,7 @@ public class DS_SpinWheel : MonoBehaviour
     [SerializeField] private Transform wheelTransform, indicator;
     public Transform indImage;
     [SerializeField] private float highlightScale = 1.2f;
-    [SerializeField] private float highlightDuration = 0.5f;
+    [SerializeField] private float highlightDuration = 0.3f;
     [SerializeField] private Vector3 positionOffset = new Vector3(-0.5f, 0, 0);
     [SerializeField] private float indicatorOffsetAngle; // Offset for North-East alignment
     [Tooltip("Game Scene")]
@@ -251,16 +251,17 @@ public class DS_SpinWheel : MonoBehaviour
                 // Check if the segment is "All Players"
                 if (segmentText.text == "All Players")
                 {
-                    yourTurnText.text = questionScript.CallYourTurnForAllPlayers();
-                    displayText.text = "If " + segmentText.text + " don't get it, they " + questionScript.CallYourTurnForAllPlayers();
+                    yourTurnText.text = questionScript.AllPlayersTurn();
+                    displayText.text = "If " + segmentText.text + " don't get it, they " + questionScript.callAllInstructionText();
+                    gameText.text = "Everyone, " + questionScript.callQuestion();
                 }
                 else
                 {
                     yourTurnText.text = questionScript.callYourTurnText();
-                    displayText.text = "If " + segmentText.text + " doesn't get it, " + segmentText.text + ", " + questionScript.callInstructionText();
+                    displayText.text = "If " + segmentText.text + " doesn't get it, " + segmentText.text + " " + questionScript.callInstructionText();
+                    gameText.text = segmentText.text + ", " + questionScript.callQuestion();
                 }
 
-                gameText.text = segmentText.text + ", " + questionScript.callQuestion();
                 yourTurnText.gameObject.SetActive(true);
             }
 
