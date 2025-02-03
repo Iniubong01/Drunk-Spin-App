@@ -9,11 +9,12 @@ public class UIManager : MonoBehaviour
     [Header("Sliding GameObject UI")]
     public RectTransform mainMenu, addPlayerMenu, SpinMenu, GameMenu, SettingsMenu;
 
+    private DS_SpinWheel spinWheel;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        spinWheel = GameObject.Find("Turner").GetComponent<DS_SpinWheel>();
     }
 
     // Update is called once per frame
@@ -37,6 +38,14 @@ public class UIManager : MonoBehaviour
     {
         addPlayerMenu.DOAnchorPos(new Vector2(1300, 0), 0.25f);
         SpinMenu.DOAnchorPos(new Vector2(0, 0), 0.25f);
+    }
+
+        public void slideOutAddPlayerUIAddMenu()
+    {
+        //Slide out Add Player
+        addPlayerMenu.DOAnchorPos(new Vector2(1300, 0), 0.25f);
+        //Slide in Main Menu UI
+        mainMenu.DOAnchorPos(new Vector2(0, 0), 0.25f).SetDelay(0.25f);
     }
 
     public void slideGameUI()

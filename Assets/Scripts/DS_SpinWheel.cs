@@ -34,9 +34,18 @@ public class DS_SpinWheel : MonoBehaviour
     private bool isSwaying = true;
 
     private Transform detectedSegment; // To store the detected segment
+    private bool isNormalMode;
+    private bool isSpicyMode;
+    private bool isWeirdMOde;
+    private bool isLadiesNightMode;
+    public Button menuButton;
+    public Button settingsButton;
+
+
 
     void Start()
     {
+        isNormalMode = true;
         questionScript = GameObject.Find("Question Manager").GetComponent<DS_QuestionScript>();
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         sectionAngle = 360f / numberOfSections;
@@ -156,6 +165,12 @@ public class DS_SpinWheel : MonoBehaviour
         wheelParent.DOScale(new Vector3(1, 1, 1f), 0.25f);
     }
 
+    public void ResetButtonState()
+    {
+        menuButton.interactable = true;
+        settingsButton.interactable = true;
+    }
+
      public void ResetSpin()
     {
         StopAllCoroutines(); // Stop all active coroutines
@@ -215,6 +230,7 @@ public class DS_SpinWheel : MonoBehaviour
         currentSpeed = initialSpeed;
         float decelerationRate = Random.Range(150f, 250f);
 
+        // Play spin sound during spin
         DS_SoundManager.instance.Play("Spin");
 
         while (currentSpeed > 0)
@@ -224,7 +240,11 @@ public class DS_SpinWheel : MonoBehaviour
             yield return null;
         }
 
+        // Spin is completed, so stop the spin sound
         DS_SoundManager.instance.Stop("Spin");
+
+        menuButton.interactable = false;
+        settingsButton.interactable = false;
        
         Invoke("wheelAnim", 1.2f);
         
@@ -251,15 +271,54 @@ public class DS_SpinWheel : MonoBehaviour
                 // Check if the segment is "All Players"
                 if (segmentText.text == "All Players")
                 {
+                    // - This will handle the question asked depending on the theme selected,
+                    // this is when the Highlighted Segment is All Players, so make sure to do as well for single players turn
+                    // - You can as well add the coin logic here adding && to the if conditions to enable unlocking the locked themes
+                    // - Meanwhile since you said you'll handle that, I have not coded any to be in locked state,
+                    // so all the themes will play regardless 
+                    
+                    if(isNormalMode == true)
+                    {
+                        gameText.text = "Everyone, " + questionScript.callQuestion();
+                    }
+                    else if(isSpicyMode == true)
+                    {
+                        gameText.text = "Everyone, " + questionScript.callSpiceUpMode();
+                    }
+                    else if(isWeirdMOde == true)
+                    {
+                        gameText.text = "Everyone, " + questionScript.callWeirdQuestionMode();
+                    }
+                    else if(isLadiesNightMode == true)
+                    {
+                        gameText.text = "Everyone, " + questionScript.callLadiesNightMode();
+                    }
+
                     yourTurnText.text = questionScript.AllPlayersTurn();
                     displayText.text = "If " + segmentText.text + " don't get it, they " + questionScript.callAllInstructionText();
-                    gameText.text = "Everyone, " + questionScript.callQuestion();
                 }
                 else
                 {
+                    // If not All Players, that's if the highlighted player is a single player
+                    if(isNormalMode == true)
+                    {
+                        gameText.text = segmentText.text + ", " + questionScript.callQuestion();                        
+                    }
+                    else if(isSpicyMode == true)
+                    {
+                        gameText.text = segmentText.text + ", " + questionScript.callSpiceUpMode();
+                    }
+                    else if(isWeirdMOde == true)
+                    {
+                        gameText.text = segmentText.text + ", " + questionScript.callWeirdQuestionMode();
+                    }
+                    else if(isLadiesNightMode == true)
+                    {
+                       gameText.text = segmentText.text + ", " + questionScript.callLadiesNightMode();
+                    }
+
                     yourTurnText.text = questionScript.callYourTurnText();
                     displayText.text = "If " + segmentText.text + " doesn't get it, " + segmentText.text + " " + questionScript.callInstructionText();
-                    gameText.text = segmentText.text + ", " + questionScript.callQuestion();
                 }
 
                 yourTurnText.gameObject.SetActive(true);
@@ -310,6 +369,43 @@ public class DS_SpinWheel : MonoBehaviour
             WheelSway();
         }
     }
+
+
+    // Bools to control the theme selected
+    public void normalTheme()
+    {
+        isNormalMode = true;
+        isSpicyMode = false;
+        isWeirdMOde = false;
+        isLadiesNightMode = false;
+    }
+
+    public void spiceUpTheme()
+    {
+        isNormalMode = false;
+        isSpicyMode = true;
+        isWeirdMOde = false;
+        isLadiesNightMode = false;
+    }
+
+    public void weirdTheme()
+    {
+        isNormalMode = false;
+        isSpicyMode = false;
+        isWeirdMOde = true;
+        isLadiesNightMode = false;
+    }
+
+    public void LadiesNightTheme()
+    {
+        isNormalMode = false;
+        isSpicyMode = false;
+        isWeirdMOde = false;
+        isLadiesNightMode = true;
+    }
+
+
+    
 
 
 
